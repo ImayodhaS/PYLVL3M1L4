@@ -56,5 +56,33 @@ async def attack(ctx):
             await ctx.send("Kedua player harus memiliki Pokémon untuk memulai pertempuran!")  # Mengumumkan bahwa setidaknya salah satu petarung tidak memiliki Pokémon 
     else:
         await ctx.send("Tentukan pengguna yang ingin Kalian serang dengan menyebut mereka.")  # Meminta untuk menyebutkan pengguna untuk menyerang
-        
+
+
+@bot.command()
+async def info(ctx):
+    author = ctx.author.name
+    if author in Pokemon.pokemons:
+        pokemon = Pokemon.pokemons[author]
+        await ctx.send(await pokemon.info())  # Mengirim informasi tentang Pokémon 
+        image_url = await pokemon.show_img()  # Mendapatkan URL gambar Pokémon
+        if image_url:
+            embed = discord.Embed()  # Membuat pesan yang disematkan (embed)
+            embed.set_image(url=image_url)  # Menyematkan gambar ke dalam pesan
+            await ctx.send(embed=embed)  # Mengirim sematan dengan gambar
+        else:
+            await ctx.send("Gagal menampilkan gambar Pokémon.")
+    else:
+        await ctx.send("Kamu belum punya Pokemon")
+
+@bot.command()
+async def feed(ctx):
+    author = ctx.author.name
+    if author in Pokemon.pokemons:
+        pok = Pokemon.pokemons[author]
+        result = await pok.feed()
+        await ctx.send(result)
+    else:
+        await ctx.send("Kamu belum punya Pokemon")
+
+
 bot.run(token)
